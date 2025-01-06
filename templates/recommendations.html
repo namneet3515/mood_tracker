@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized Wellness Recommendations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Personalized Wellness Recommendations</h1>
+
+    <h2>Your mood: {{ mood }}</h2>
+    
+    <h3>Recommended Activities:</h3>
+    <ul>
+        {% for activity in activities %}
+            <li>{{ activity }}</li>
+        {% endfor %}
+    </ul>
+
+    <form action="/journal" method="POST">
+        <h3>Write Your Journal Entry:</h3>
+        <textarea name="journal_entry" rows="4" cols="50" placeholder="Write down your thoughts..."></textarea><br><br>
+        <input type="hidden" name="mood" value="{{ mood }}">
+        <button type="submit">Save Journal Entry</button>
+    </form>
+
+    <br>
+    <a href="/">Go Back</a>
+</body>
+</html>

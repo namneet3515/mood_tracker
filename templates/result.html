@@ -3,17 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mood Tracker - Result</title>
+    <title>Your Mood Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <h1>Detected Mood: {{ mood }}</h1>
-    <h2>Personalized Wellness Recommendations:</h2>
-    <ul>
-        {% for activity in activities %}
-            <li>{{ activity }}</li>
-        {% endfor %}
-    </ul>
-    <br>
-    <a href="/">Go back</a>
+<body class="mood-{{ mood.lower() if mood else 'neutral' }}">
+    <div class="container">
+        <div class="mood-result">
+            <!-- Mood Icon and Message -->
+            <div class="mood-icon">
+                {% if mood == 'Happy' %}
+                    <i class="fas fa-smile-beam"></i>
+                {% elif mood == 'Sad' %}
+                    <i class="fas fa-sad-tear"></i>
+                {% elif mood == 'Neutral' %}
+                    <i class="fas fa-meh"></i>
+                {% else %}
+                    <i class="fas fa-tired"></i>
+                {% endif %}
+            </div>
+            
+            <div class="mood-message">
+                <h1>
+                    {% if mood == 'Happy' %}
+                        ✨ Your positivity is contagious! ✨
+                    {% elif mood == 'Sad' %}
+                        💙 Let's brighten your day 💙
+                    {% elif mood == 'Neutral' %}
+                        🌱 Ready for some excitement? 🌱
+                    {% elif mood == 'Stressed' %}
+                        🌸 Time for some fun and relaxation 🌸
+                    {% endif %}
+                </h1>
+                <p>Here's what we recommend for you today!</p>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div class="recommendations">
+                <h2>Fun Activities Just for You!</h2>
+                {% for activity in activities %}
+                    <div class="recommendation-item">
+                        <i class="fas fa-star"></i>
+                        <p>{{ activity }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Articles Section -->
+            <div class="articles-section">
+                <h2>Cheerful Reads to Boost Your Mood</h2>
+                <div class="articles-container">
+                    {% for article in articles %}
+                        <div class="article-card">
+                            <div class="article-time">
+                                <i class="fas fa-clock"></i> {{ article.reading_time }}
+                            </div>
+                            <h3>{{ article.title }}</h3>
+                            <p>{{ article.snippet }}</p>
+                            <button class="read-more-btn">Read More</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Journal Section -->
+            <div class="journal-section">
+                <h2>Write Your Thoughts</h2>
+                {% if journal_success %}
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i> Journal entry saved successfully!
+                    </div>
+                {% endif %}
+                <form action="{{ url_for('journal') }}" method="POST">
+                    <textarea 
+                        name="journal_entry" 
+                        placeholder="How are you feeling right now?"
+                        required></textarea>
+                    <input type="hidden" name="mood" value="{{ mood }}">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-journal-whills"></i> Save Journal Entry
+                    </button>
+                </form>
+            </div>
+
+            <a href="/" class="btn">
+                <i class="fas fa-arrow-left"></i> New Mood Check-in
+            </a>
+        </div>
+    </div>
 </body>
 </html>

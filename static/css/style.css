@@ -1,35 +1,312 @@
+/* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --happy-gradient: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+  --sad-gradient: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+  --neutral-gradient: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+  --stressed-gradient: linear-gradient(120deg, #ff9a9e 0%, #fad0c4 100%);
+  --transition-speed: 0.5s;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    padding: 20px;
-    background-color: #f4f4f9;
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #f4f4f9;
+  transition: background var(--transition-speed) ease;
+}
+
+/* Mood-specific backgrounds */
+body.mood-happy {
+  background: var(--happy-gradient);
+}
+
+body.mood-sad {
+  background: var(--sad-gradient);
+}
+
+body.mood-neutral {
+  background: var(--neutral-gradient);
+}
+
+body.mood-stressed {
+  background: var(--stressed-gradient);
+}
+
+.container {
+  max-width: 800px;
+  width: 90%;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(31, 38, 135, 0.25);
 }
 
 h1, h2, h3 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  animation: fadeIn 1s ease;
+}
+
+/* Form Styles */
+.mood-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 12px;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 120px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #5151E5;
+  box-shadow: 0 0 0 3px rgba(81, 81, 229, 0.1);
+}
+
+/* Result Page Styles */
+.mood-result {
+  text-align: center;
+  animation: slideUp 0.5s ease;
+}
+
+.mood-icon {
+  font-size: 4rem;
+  margin: 1rem 0;
+  animation: bounce 1s ease infinite;
+}
+
+.mood-message {
+  font-size: 1.5rem;
+  margin: 1.5rem 0;
+  color: #333;
+  animation: fadeIn 0.5s ease;
+}
+
+/* Recommendations Section */
+.recommendations {
+  margin-top: 2rem;
+  padding: 0;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: slideIn 0.5s ease;
+  transition: all 0.3s ease;
+}
+
+.recommendation-item:hover {
+  transform: translateX(10px);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.recommendation-item i {
+  font-size: 1.5rem;
+  color: #5151E5;
+}
+
+/* Journal Section */
+.journal-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  animation: fadeIn 0.5s ease;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  margin: 1rem 0;
+  text-decoration: none;
+  color: #5151E5;
+  border: 2px solid #5151E5;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #5151E5;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.submit-btn {
+  background: #5151E5;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  background: #4141c9;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 1.5rem;
+    margin: 1rem auto;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .mood-icon {
+    font-size: 3rem;
+  }
+}
+/* Articles Section */
+.articles-section {
+    margin-top: 2rem;
+    padding: 1rem;
+}
+
+.articles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.article-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.article-time {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(81, 81, 229, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #5151E5;
+}
+
+.article-card h3 {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
     color: #333;
+    font-size: 1.2rem;
 }
 
-form {
-    margin-bottom: 20px;
+.article-card p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
-input[type="text"], textarea {
-    padding: 10px;
-    width: 100%;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-input[type="submit"] {
-    background-color: #4CAF50;
+.read-more-btn {
+    background: #5151E5;
     color: white;
-    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
 }
 
-input[type="submit"]:hover {
-    background-color: #45a049;
+.read-more-btn:hover {
+    background: #4141c9;
+    transform: translateY(-2px);
+}
+
+/* Journal Success Message */
+.success-message {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.5s ease;
 }

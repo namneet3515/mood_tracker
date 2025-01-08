@@ -6,25 +6,292 @@
     <title>Your Mood Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #3498db;
+            --accent-color: #f39c12;
+            --text-color: #2c3e50;
+            --background-color: #ecf0f1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow-color);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 30px;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+        }
+
+        .mood-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mood-icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+
+        .mood-message {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .mood-message h2 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        .recommendations, .badges-section, .articles-section, .journal-section {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .recommendation-item i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge i {
+            margin-right: 8px;
+        }
+
+        .articles-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .article-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .article-time {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .read-more-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .read-more-btn:hover {
+            background-color: #2980b9;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--secondary-color);
+            border-radius: 10px;
+            resize: vertical;
+            min-height: 120px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2);
+        }
+
+        .submit-btn, .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .submit-btn:hover, .btn:hover {
+            background-color: #9b59b6;
+        }
+
+        .submit-btn:active, .btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn i, .btn i {
+            margin-right: 10px;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .success-message i {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .mood-icon {
+                font-size: 3rem;
+            }
+
+            .articles-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body class="mood-{{ mood.lower() if mood else 'neutral' }}">
+    <div style="display:none;">
+        Debug: Mood = {{ mood|lower }}
+    </div>
     <div class="container">
         <div class="mood-result">
-            <!-- Mood Icon and Message -->
-            <div class="mood-icon">
-                {% if mood == 'Happy' %}
-                    <i class="fas fa-smile-beam"></i>
-                {% elif mood == 'Sad' %}
-                    <i class="fas fa-sad-tear"></i>
-                {% elif mood == 'Neutral' %}
-                    <i class="fas fa-meh"></i>
-                {% else %}
-                    <i class="fas fa-tired"></i>
-                {% endif %}
+            <!-- Mood Display -->
+            <div class="mood-display">
+                <h1 class="mood-title">Your Mood: {{ mood|capitalize }}</h1>
             </div>
             
+            <!-- Mood Icon and Message -->
+            <div class="mood-icon">
+    {% if mood|lower == 'happy' %}
+        <i class="fas fa-smile-beam"></i>
+    {% elif mood|lower == 'sad' %}
+        <i class="fas fa-sad-tear"></i>
+    {% elif mood|lower == 'neutral' %}
+        <i class="fas fa-meh"></i>
+    {% elif mood|lower == 'stressed' %}
+        <i class="fas fa-tired"></i>
+    {% elif mood|lower == 'depressed' %}
+        <i class="fas fa-cloud-rain"></i>
+    {% elif mood|lower == 'angry' %}
+        <i class="fas fa-angry"></i>
+    {% elif mood|lower == 'anxious' %}
+        <i class="fas fa-flushed"></i>
+    {% elif mood|lower == 'excited' %}
+        <i class="fas fa-grin-stars"></i>
+    {% else %}
+        <i class="fas fa-question-circle"></i>
+    {% endif %}
+</div>
+            
             <div class="mood-message">
-                <h1>
+                <h2>
                     {% if mood == 'Happy' %}
                         ✨ Your positivity is contagious! ✨
                     {% elif mood == 'Sad' %}
@@ -34,7 +301,7 @@
                     {% elif mood == 'Stressed' %}
                         🌸 Time for some fun and relaxation 🌸
                     {% endif %}
-                </h1>
+                </h2>
                 <p>Here's what we recommend for you today!</p>
             </div>
 
@@ -47,6 +314,12 @@
                         <p>{{ activity }}</p>
                     </div>
                 {% endfor %}
+            </div>
+
+            <!-- Badges Section -->
+            <div class="badges-section">
+                <h2>Your Achievements</h2>
+                <div class="badges-container" id="badges"></div>
             </div>
 
             <!-- Articles Section -->
@@ -91,5 +364,58 @@
             </a>
         </div>
     </div>
+<script>
+    // Badge logic based on detected mood
+    const badgeKeywords = {
+        happy: ["Positivity Guru", "Joy Spreader", "Optimism Star"],
+        sad: ["Resilience Hero", "Hope Seeker", "Strength Badge"],
+        stressed: ["Relaxation Pro", "Calm Creator", "Peace Ambassador"],
+        neutral: ["Mindful Master", "Balance Keeper", "Focus Achiever"],
+        depressed: ["Courage Champion", "Recovery Warrior", "Healing Hero"],
+        angry: ["Calm Cultivator", "Patience Practitioner", "Serenity Seeker"],
+        anxious: ["Brave Heart", "Worry Warrior", "Tranquility Tracker"],
+        excited: ["Enthusiasm Expert", "Celebration Champion", "Zest Zenith"]
+    };
+
+    // Detect mood and display badges when the page loads
+    window.onload = function () {
+        // Use the mood from Flask's template rendering
+        const detectedMood = "{{ mood|lower }}".trim();
+
+        // Debugging detected mood
+        console.log("Detected Mood:", detectedMood);
+
+        // Get badges for the detected mood, fallback to Explorer Badge if mood not found
+        const awardedBadges = badgeKeywords[detectedMood] || ["Explorer Badge"];
+
+        // Get badges container
+        const badgesContainer = document.getElementById("badges");
+        console.log("Badges container element:", badgesContainer);
+
+        // Clear any existing badges
+        badgesContainer.innerHTML = '';
+
+        // Display badges
+        awardedBadges.forEach((badge) => {
+            const badgeDiv = document.createElement("div");
+            badgeDiv.classList.add("badge");
+            badgeDiv.innerHTML = `
+                <i class="fas fa-award"></i>
+                <span>${badge}</span>
+            `;
+            badgesContainer.appendChild(badgeDiv);
+
+            // Debugging: Log each badge as it's created
+            console.log("Badge created:", badge);
+        });
+
+        // Debugging: Log the number of badges created
+        console.log("Number of badges created:", awardedBadges.length);
+
+        // Debugging: Log the final HTML content of the badges container
+        console.log("Badges container HTML:", badgesContainer.innerHTML);
+    };
+</script>
 </body>
 </html>
+

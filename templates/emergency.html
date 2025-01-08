@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Support</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<style>
+    /* Emergency page specific styles */
+:root {
+  --alert-red: #ff4444;
+  --alert-dark-red: #cc0000;
+  --alert-light-red: #ffebeb;
+  --safe-white: #ffffff;
+  --safe-black: #333333;
+  --alert-yellow: #ffd700;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--alert-light-red);
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: var(--safe-black);
+}
+
+.emergency-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.emergency-header {
+  background-color: var(--alert-red);
+  color: var(--safe-white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.emergency-header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.emergency-subtitle {
+  font-size: 1.2em;
+  margin: 10px 0 0;
+}
+
+.emergency-hotlines {
+  background-color: var(--safe-white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 5px solid var(--alert-red);
+}
+
+.hotline-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: var(--alert-light-red);
+  border-radius: 6px;
+}
+
+.hotline-item h3 {
+  margin: 0 0 10px 0;
+  color: var(--alert-dark-red);
+}
+
+.phone-number {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--alert-red);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.phone-number:hover {
+  color: var(--alert-dark-red);
+}
+
+.immediate-actions {
+  background-color: var(--safe-white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 5px solid var(--alert-yellow);
+}
+
+.immediate-actions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.immediate-actions li {
+  margin-bottom: 10px;
+  color: var(--safe-black);
+}
+
+.consent-form {
+  background-color: var(--safe-white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.consent-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.consent-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+}
+
+.emergency-button {
+  background-color: var(--alert-red);
+  color: var(--safe-white);
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1em;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 15px;
+  transition: background-color 0.3s ease;
+}
+
+.emergency-button:hover {
+  background-color: var(--alert-dark-red);
+}
+
+.additional-resources {
+  background-color: var(--safe-white);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.resource-link {
+  display: block;
+  padding: 10px;
+  margin: 5px 0;
+  color: var(--alert-red);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.resource-link:hover {
+  background-color: var(--alert-light-red);
+  color: var(--alert-dark-red);
+}
+
+.quick-exit-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--alert-dark-red);
+  color: var(--safe-white);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1.1em;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.quick-exit-button:hover {
+  background-color: #990000;
+}
+
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.toast {
+  background-color: var(--safe-black);
+  color: var(--safe-white);
+  padding: 12px 24px;
+  border-radius: 4px;
+  margin-top: 10px;
+  animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+}
+
+.char-counter {
+  font-size: 0.8em;
+  color: #666;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .emergency-container {
+      padding: 10px;
+  }
+
+  .emergency-header h1 {
+      font-size: 2em;
+  }
+
+  .phone-number {
+      font-size: 1.2em;
+  }
+
+  .quick-exit-button {
+      padding: 8px 16px;
+      font-size: 1em;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+      --alert-red: #ff0000;
+      --alert-dark-red: #cc0000;
+      --alert-light-red: #ffcccc;
+      --safe-white: #ffffff;
+      --safe-black: #000000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+      animation: none !important;
+      transition: none !important;
+  }
+}
+
+</style>
+<body>
+    <div class="emergency-container">
+        <div class="emergency-header">
+            <h1>You're Not Alone</h1>
+            <p class="emergency-subtitle">We're here to help. Help is available 24/7.</p>
+        </div>
+
+        <div class="emergency-hotlines">
+            <h2>Immediate Support Available:</h2>
+            {% for hotline in resources.hotlines %}
+            <div class="hotline-item">
+                <h3>{{ hotline.name }}</h3>
+                {% if hotline.number %}
+                <p class="phone-number">{{ hotline.number }}</p>
+                {% else %}
+                <p class="contact-info">{{ hotline.contact }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="immediate-actions">
+            <h2>Steps You Can Take Right Now:</h2>
+            <ul>
+                {% for action in resources.immediate_actions %}
+                <li>{{ action }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="consent-form">
+            <h2>Let Us Help You</h2>
+            <form action="{{ url_for('get_help') }}" method="POST">
+                <div class="form-group">
+                    <label for="name">Your Name (Optional):</label>
+                    <input type="text" id="name" name="name">
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Information (Optional):</label>
+                    <input type="text" id="contact" name="contact">
+                </div>
+                <div class="form-group consent-checkbox">
+                    <input type="checkbox" id="consent" name="consent">
+                    <label for="consent">I consent to be contacted by a mental health professional</label>
+                </div>
+                <button type="submit" class="emergency-button">Request Support</button>
+            </form>
+        </div>
+
+        <div class="additional-resources">
+            <h2>Additional Resources:</h2>
+            {% for resource in resources.support_resources %}
+            <a href="{{ resource.link }}" class="resource-link" target="_blank">
+                {{ resource.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+       // Emergency page specific JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    // Click-to-call functionality
+    const setupClickToCall = () => {
+        const phoneNumbers = document.querySelectorAll('.phone-number');
+        phoneNumbers.forEach(number => {
+            number.addEventListener('click', function() {
+                const tel = this.textContent.replace(/\D/g, ''); // Remove non-digits
+                window.location.href = `tel:${tel}`;
+            });
+            // Add visual indication that number is clickable
+            number.style.cursor = 'pointer';
+            number.title = 'Click to call';
+            // Add phone icon if not present
+            if (!number.querySelector('.phone-icon')) {
+                number.innerHTML += ' 📞';
+            }
+        });
+    };
+
+    // Copy to clipboard functionality for hotlines
+    const setupCopyToClipboard = () => {
+        const contactInfos = document.querySelectorAll('.contact-info, .phone-number');
+        contactInfos.forEach(info => {
+            const copyButton = document.createElement('button');
+            copyButton.innerHTML = '📋';
+            copyButton.className = 'copy-button';
+            copyButton.title = 'Copy to clipboard';
+            
+            copyButton.addEventListener('click', async (e) => {
+                e.stopPropagation(); // Prevent click-to-call if this is a phone number
+                try {
+                    await navigator.clipboard.writeText(info.textContent.replace('📞', '').trim());
+                    showToast('Copied to clipboard');
+                } catch (err) {
+                    showToast('Failed to copy');
+                }
+            });
+            
+            info.appendChild(copyButton);
+        });
+    };
+
+    // Quick exit functionality
+    const setupQuickExit = () => {
+        const exitButton = document.createElement('button');
+        exitButton.innerHTML = '❌ Quick Exit';
+        exitButton.className = 'quick-exit-button';
+        exitButton.addEventListener('click', () => {
+            window.location.replace('https://www.google.com');
+        });
+        document.body.insertBefore(exitButton, document.body.firstChild);
+    };
+
+    // Toast notification system
+    const setupToastSystem = () => {
+        const toastContainer = document.createElement('div');
+        toastContainer.id = 'toast-container';
+        document.body.appendChild(toastContainer);
+    };
+
+    const showToast = (message) => {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.getElementById('toast-container').appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    };
+
+    // Form validation and enhancement
+    const setupFormEnhancements = () => {
+        const form = document.querySelector('.consent-form form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const consent = document.getElementById('consent');
+                if (!consent.checked) {
+                    e.preventDefault();
+                    showToast('Please provide consent to continue');
+                }
+            });
+
+            // Add character count for text inputs
+            const inputs = form.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                const counter = document.createElement('div');
+                counter.className = 'char-counter';
+                input.parentNode.appendChild(counter);
+                
+                input.addEventListener('input', function() {
+                    counter.textContent = `${this.value.length}/50 characters`;
+                });
+            });
+        }
+    };
+
+    // Page leave warning
+    const setupPageLeaveWarning = () => {
+        window.addEventListener('beforeunload', (e) => {
+            const message = 'Are you sure you want to leave? Help is available.';
+            e.returnValue = message;
+            return message;
+        });
+    };
+
+    // Initialize all features
+    setupClickToCall();
+    setupCopyToClipboard();
+    setupQuickExit();
+    setupToastSystem();
+    setupFormEnhancements();
+    setupPageLeaveWarning();
+
+    // Add necessary styles for the new elements
+    const style = document.createElement('style');
+    style.textContent = `
+        .quick-exit-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .copy-button {
+            margin-left: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .phone-number {
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .toast {
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 4px;
+            margin-top: 10px;
+            animation: fadeIn 0.5s, fadeOut 0.5s 2.5s;
+        }
+
+        .char-counter {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes fadeOut {
+            from {opacity: 1;}
+            to {opacity: 0;}
+        }
+    `;
+    document.head.appendChild(style);
+});
+    </script>
+</body>
+</html>
